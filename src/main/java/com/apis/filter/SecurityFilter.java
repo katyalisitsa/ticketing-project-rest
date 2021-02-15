@@ -58,6 +58,6 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private boolean checkIfUserIsValid(String username) {
         User currentUser = securityService.loadUser(username);
-        return currentUser != null && currentUser.getIsVerified() && currentUser.getState() == UserState.ACTIVE;
+        return currentUser != null && currentUser.isEnabled();
     }
 }
