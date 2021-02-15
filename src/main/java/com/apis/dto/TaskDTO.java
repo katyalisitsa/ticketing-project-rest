@@ -1,24 +1,27 @@
 package com.apis.dto;
 
-
 import com.apis.enums.Status;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class TaskDTO {
 
-    private Long id;
+    private Long Id;
     private ProjectDTO project;
-    private UserDTO assignedEmployee;
     private String taskSubject;
-    private String taskDetail;
-    private Status taskStatus;
-    private LocalDate assignedDate;
+    private UserDTO assignedEmployee;
+    @DateTimeFormat(pattern = "MM/dd/yyyy hh:mm")
+    LocalDate assignedDate;
+
+    private Status status;
+    private String details;
+
 
 }

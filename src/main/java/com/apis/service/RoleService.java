@@ -8,4 +8,7 @@ public interface RoleService {
 
     List<RoleDTO> listAllRoles();
     RoleDTO findById(Long id);
+
+
+
 }

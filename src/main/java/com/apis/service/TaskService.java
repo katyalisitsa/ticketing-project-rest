@@ -9,25 +9,24 @@ import com.apis.enums.Status;
 import java.util.List;
 
 public interface TaskService {
-
-    TaskDTO findById(Long id);
+    TaskDTO findById(Long taskId);
     List<TaskDTO> listAllTasks();
     Task save(TaskDTO dto);
+
     void update(TaskDTO dto);
-    void delete(long id);
+    void delete(Long taskId);
 
-    int totalNonCompletedTasks(String projectCode);
-    int totalCompletedTasks(String projectCode);
+    int totalCountNonCompletedTasks(String projectCode);
+    int totalCountCompletedTasks(String projectCode);
 
+    List<TaskDTO> listAllTasksByProject(ProjectDTO project);
     void deleteByProject(ProjectDTO project);
-
-    List<TaskDTO> listAllByProject(ProjectDTO project);
 
     List<TaskDTO> listAllTasksByStatusIsNot(Status status);
 
     List<TaskDTO> listAllTasksByProjectManager();
 
-    void updateStatus(TaskDTO dto);
+    void updateStatus (TaskDTO dto);
 
     List<TaskDTO> listAllTasksByStatus(Status status);
 

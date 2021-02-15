@@ -6971,15 +6971,13 @@ Media Query
 .simple-card .nav.nav-tabs .nav-item .nav-link {
     padding: 17px 29px;}
 }
-
-.disabled-button {
+/*---------- project-status disabled-button*/
+.disabled-button{
     background: #cdcdcd;
     color: black;
     border-color: #cdcdcd;
     cursor: not-allowed !important;
 }
-
-
  
  
 

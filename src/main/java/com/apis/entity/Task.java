@@ -9,27 +9,29 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "tasks")
 @NoArgsConstructor
 @Getter
 @Setter
+@Entity
+@Table(name="tasks")
 @Where(clause = "is_deleted=false")
-public class Task extends BaseEntity {
+public class Task extends BaseEntity{
 
     private String taskSubject;
-    private String taskDetail;
+    private String details;
 
     @Enumerated(EnumType.STRING)
-    private Status taskStatus;
+    private Status status;
 
-    private LocalDate assignedDate;
+    LocalDate assignedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name="user_id")
     private User assignedEmployee;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name="project_id")
     private Project project;
+
+
 }

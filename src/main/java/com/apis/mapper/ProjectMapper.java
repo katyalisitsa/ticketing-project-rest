@@ -2,28 +2,24 @@ package com.apis.mapper;
 
 import com.apis.dto.ProjectDTO;
 import com.apis.entity.Project;
-import com.apis.repository.ProjectRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProjectMapper {
-
     private ModelMapper modelMapper;
-    private ProjectRepository projectRepository;
 
-    public ProjectMapper(ModelMapper modelMapper, ProjectRepository projectRepository) {
+    public ProjectMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
-        this.projectRepository = projectRepository;
     }
 
     public Project convertToEntity(ProjectDTO dto){
-
-        return modelMapper.map(dto,Project.class);
+        return modelMapper.map(dto, Project.class);
     }
 
-    public ProjectDTO convertToDto(Project entity){
-
-        return modelMapper.map(entity,ProjectDTO.class);
+    public ProjectDTO convertToDTO(Project entity){
+        return modelMapper.map(entity, ProjectDTO.class);
     }
+
+
 }

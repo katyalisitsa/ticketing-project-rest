@@ -1,15 +1,13 @@
 package com.apis.dto;
 
 import com.apis.enums.Gender;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class UserDTO {
 
     private Long id;
@@ -17,7 +15,8 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String userName;
-    private String passWord;
+    private String password;
+    private String confirmPassword;
     private boolean enabled;
     private String phone;
     private RoleDTO role;

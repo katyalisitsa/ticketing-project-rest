@@ -1,38 +1,40 @@
 package com.apis.entity;
 
 import com.apis.enums.Status;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "projects")
+
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@ToString
+@Entity
+@Table(name="projects")
 @Where(clause = "is_deleted=false")
 public class Project extends BaseEntity {
-
-    @Column(unique = true)
-    private String projectCode;
-
     private String projectName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id")
+    @Column(unique = true)//server side validation
+    private String projectCode;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="manager_id")
     private User assignedManager;
+
 
     private LocalDate startDate;
     private LocalDate endDate;
 
+    private String projectDetails;
     @Enumerated(EnumType.STRING)
     private Status projectStatus;
 
-    private String projectDetail;
+
 
 
 }

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="/fragments/head :: header"></head>
@@ -53,7 +54,7 @@
                                                 <td th:text="${task.taskSubject}" />
                                                 <td th:text="${task.assignedEmployee.firstName +' '+ task.assignedEmployee.lastName}" />
                                                 <td th:text="${#temporals.format(task.assignedDate, 'MM/dd/yyyy')}" />
-                                                <td th:text="${task.taskStatus.value}" /> </tr>
+                                                <td th:text="${task.status.value}" /> </tr>
                                             </tbody>
                                         </table>
                                     </div>

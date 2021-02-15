@@ -60,7 +60,8 @@
                                                     <div class="col-sm-12 col-md-12 col-xs-12">
                                                         <div class="form-group">
                                                             <label>Detail</label>
-                                                            <textarea class="form-control" rows="3" th:field="*{taskDetail}" aria-describedby="inputGroupPrepend" disabled ></textarea>
+                                                            <textarea class="form-control" rows="3" th:field="*{details}"
+                                                                      aria-describedby="inputGroupPrepend" disabled ></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -70,9 +71,11 @@
                                             <div class="col-sm-6 col-md-6 col-xs-12">
                                                 <div class="form-group">
                                                     <label>Status</label>
-                                                    <select name="taskStatus" class="custom-select" required >
+                                                    <select name="taskStatus" class="custom-select" required
+                                                            th:field="*{status}">
                                                         <option th:value="''" th:text="Select"></option>
-                                                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.value}" th:selected="${s == task.taskStatus}"></option>
+                                                        <option th:each="s : ${statuses}" th:value="${s}"
+                                                                th:text="${s.value}" th:selected="${s == task.status}"></option>
                                                     </select>
                                                     <div class="invalid-feedback">Please choose Status</div>
                                                 </div>
@@ -119,7 +122,7 @@
                                                 <td th:text="${task.taskSubject}" />
                                                 <td th:text="${task.assignedEmployee.firstName +' '+ task.assignedEmployee.lastName}" />
                                                 <td th:text="${#temporals.format(task.assignedDate, 'MM/dd/yyyy')}" />
-                                                <td th:text="${task.taskStatus}" />
+                                                <td th:text="${task.status}" />
                                                 <td><a class="btn btn-warning rounded-0" th:href="@{/task/employee/edit/{id}(id=${task.id})}">Update</a> </td>
                                             </tr>
                                             </tbody>
