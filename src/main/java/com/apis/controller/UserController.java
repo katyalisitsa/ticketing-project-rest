@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-//    @Autowired
     RoleService roleService;
-//    @Autowired
     UserService userService;
 
     public UserController(RoleService roleService, UserService userService) {
@@ -22,11 +20,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    //    @GetMapping({"/create", "/add", "initialize"})  //{} represent list
     @GetMapping("/create")  //{} represent list
     public String createUser(Model model) {
-//        userService.findAll().stream().forEach(user -> System.out.println(user.toString()));
-//        System.out.println(userService.findAll().toString());
+
         model.addAttribute("user", new UserDTO());
         model.addAttribute("rolelist",roleService.listAllRoles());
         model.addAttribute("userlist", userService.listAllUsers());
@@ -39,11 +35,6 @@ public class UserController {
     public String insertUser(UserDTO user,  Model model){
 
         userService.save(user);
-
-        //user, rolelist, userlist object need to pass to view
-//        model.addAttribute("user", new UserDTO()); //is for new form after hit save button
-//        model.addAttribute("rolelist", roleService.findAll());
-//        model.addAttribute("userlist", userService.findAll());
         return("redirect:/user/create"); //redirect and removed redundancy of same code block
     }
 //
