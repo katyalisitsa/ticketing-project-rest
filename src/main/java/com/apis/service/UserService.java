@@ -10,7 +10,7 @@ public interface UserService {
 
     List<UserDTO> listAllUsers(); //service communicate with DTO, and DTO communicate with Entity
     UserDTO findByUserName(String userName);
-    UserDTO save(UserDTO dto);
+    UserDTO save(UserDTO dto) throws TicketingProjectException;
     UserDTO update(UserDTO dto);
     void delete(String username) throws TicketingProjectException;
 
