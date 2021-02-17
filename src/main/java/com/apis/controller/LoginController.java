@@ -103,7 +103,7 @@ public class LoginController {
                 .token(createdConfirmationToken.getToken())
                 .subject("Confirm registration")
                 .message("To confirm your account please click here: ")
-                .url(BASE_URL + "/conirmation?token=")
+                .url(BASE_URL + "/confirmation?token=")
                 .build();
     }
 
