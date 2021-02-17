@@ -1,5 +1,6 @@
 package com.apis.controller;
 
+import com.apis.annotation.DefaultExceptionMessage;
 import com.apis.dto.UserDTO;
 import com.apis.entity.ResponseWrapper;
 import com.apis.entity.User;
@@ -8,6 +9,7 @@ import com.apis.exception.TicketingProjectException;
 import com.apis.mapper.MapperUtil;
 import com.apis.service.UserService;
 import com.apis.util.JWTUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,6 +53,16 @@ public class LoginController {
         String jwtToken = jwtUtil.generateToken(convertedUser);
 
         return ResponseEntity.ok(new ResponseWrapper("Login Successful", jwtToken));
+
+    }
+
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @PostMapping("/create-user")
+    @Operation(summary = "Create new account")
+    private ResponseEntity<ResponseWrapper> doRegister(@RequestBody UserDTO userDTO) {
+        UserDTO createdUser = userService.save(userDTO);
+
+        sendEmail(createEmail(createdUser));
 
     }
 
