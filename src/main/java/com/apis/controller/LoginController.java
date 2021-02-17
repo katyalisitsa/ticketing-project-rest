@@ -29,7 +29,6 @@ public class LoginController {
     @Value("${app.local-url}")
     private String BASE_URL;
 
-
     private AuthenticationManager authenticationManager;
     private UserService userService;
     private MapperUtil mapperUtil;
