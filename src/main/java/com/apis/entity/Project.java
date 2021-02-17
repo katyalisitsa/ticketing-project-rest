@@ -1,6 +1,7 @@
 package com.apis.entity;
 
 import com.apis.enums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name="projects")
 @Where(clause = "is_deleted=false")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer"}, ignoreUnknown = true)
 public class Project extends BaseEntity {
     private String projectName;
 

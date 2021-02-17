@@ -1,6 +1,7 @@
 package com.apis.entity;
 
 import com.apis.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="users")
 @Where(clause = "is_deleted=false")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer"}, ignoreUnknown = true)
 public class User extends BaseEntity{
 
 

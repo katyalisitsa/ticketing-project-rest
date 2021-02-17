@@ -1,6 +1,9 @@
 package com.apis.dto;
 
 import com.apis.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @NoArgsConstructor
@@ -8,6 +11,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer"}, ignoreUnknown = true)
 public class UserDTO {
 
     private Long id;
@@ -15,8 +19,13 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String userName;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String confirmPassword;
+
     private boolean enabled;
     private String phone;
     private RoleDTO role;
