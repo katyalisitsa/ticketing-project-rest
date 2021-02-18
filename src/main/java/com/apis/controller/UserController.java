@@ -105,8 +105,37 @@ public class UserController {
     public ResponseEntity<ResponseWrapper> readByUsername(@PathVariable("username") String username) {
 
         UserDTO user = userService.findByUserName(username);
-        return ResponseEntity.ok((new ResponseWrapper("Successfully retrieved user", user));
+        return ResponseEntity.ok((new ResponseWrapper("Successfully retrieved user", user)));
 
+    }
+
+    @PutMapping
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Update user")
+    public ResponseEntity<ResponseWrapper> updateUser(@RequestBody UserDTO user) {
+        UserDTO updatedUser = userService.update(user);
+        return ResponseEntity.ok((new ResponseWrapper("Successfully updated user", updatedUser)));
+
+    }
+
+    @DeleteMapping("/username")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Delete user")
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable("userName") String username) throws TicketingProjectException {
+        userService.delete(username);
+
+        return ResponseEntity.ok((new ResponseWrapper("Successfully deleted user")));
+
+    }
+
+    @GetMapping("/role")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Retrieve users")
+    public ResponseEntity<ResponseWrapper> readByRole(@RequestParam String role) {
+        List<UserDTO> userList = userService.listAllByRole(role);
+
+        return ResponseEntity.ok((new ResponseWrapper("Successfully retrieved users by role", userList)));
     }
 
 
