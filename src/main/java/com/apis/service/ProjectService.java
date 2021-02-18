@@ -13,7 +13,7 @@ public interface ProjectService {
     ProjectDTO update(ProjectDTO dto);
     void delete(String projectCode);
 
-    void complete(String projectCode);
+    ProjectDTO complete(String projectCode) throws TicketingProjectException;
 
     List<ProjectDTO> listAllProjectDetails();
 
