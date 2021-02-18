@@ -132,6 +132,7 @@ public class UserController {
     @GetMapping("/role")
     @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
     @Operation(summary = "Retrieve users")
+    @PreAuthorize("hasAnyAuthority({'Admin','Manager'})")
     public ResponseEntity<ResponseWrapper> readByRole(@RequestParam String role) {
         List<UserDTO> userList = userService.listAllByRole(role);
 
