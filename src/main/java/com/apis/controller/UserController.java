@@ -22,6 +22,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/user")
 @Tag(name = "User Controller", description = "User API")
@@ -75,13 +77,35 @@ public class UserController {
                 .build();
     }
 
-    private void sendEmail(MailDTO mailDTO) {
+    public void sendEmail(MailDTO mailDTO) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(mailDTO.getEmailTo());
         mailMessage.setSubject(mailDTO.getSubject());
         mailMessage.setText(mailDTO.getMessage() + mailDTO.getUrl() + mailDTO.getToken());
 
         confirmationTokenService.sendEmail(mailMessage);
+
+    }
+
+    @GetMapping
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Read all users")
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<ResponseWrapper> readAll() {
+
+        List<UserDTO> result = userService.listAllUsers();
+        return ResponseEntity.ok((new ResponseWrapper("Successfully retrieved users", result));
+
+    }
+
+    @GetMapping("/{username}")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Read all users")
+    //Only admin should see other profiles or current user can see his/her profile
+    public ResponseEntity<ResponseWrapper> readByUsername(@PathVariable("username") String username) {
+
+        UserDTO user = userService.findByUserName(username);
+        return ResponseEntity.ok((new ResponseWrapper("Successfully retrieved user", user));
 
     }
 
