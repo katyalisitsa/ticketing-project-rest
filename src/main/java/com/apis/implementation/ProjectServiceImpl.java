@@ -8,6 +8,7 @@ import com.apis.enums.Status;
 import com.apis.exception.TicketingProjectException;
 import com.apis.mapper.MapperUtil;
 import com.apis.repository.ProjectRepository;
+import com.apis.repository.UserRepository;
 import com.apis.service.ProjectService;
 import com.apis.service.TaskService;
 import com.apis.service.UserService;
@@ -24,12 +25,14 @@ public class ProjectServiceImpl implements ProjectService {
     private UserService userService;
     private TaskService taskService;
     private MapperUtil mapperUtil;
+    private UserRepository userRepository;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, UserService userService, TaskService taskService, MapperUtil mapperUtil) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, UserService userService, TaskService taskService, MapperUtil mapperUtil, UserRepository userRepository) {
         this.projectRepository = projectRepository;
         this.userService = userService;
         this.taskService = taskService;
         this.mapperUtil = mapperUtil;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -96,15 +99,16 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectDTO> listAllProjectDetails() {
+    public List<ProjectDTO> listAllProjectDetails() throws TicketingProjectException {
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserDTO currentUserDTO = userService.findByUserName(username);
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long currentId = Long.parseLong(id);
 
-        User user = mapperUtil.convert(currentUserDTO, new User()); //user == manager
-        List<Project> projectList = projectRepository.findAllByAssignedManager(user);
+        User user = userRepository.findById(currentId).orElseThrow(() -> new TicketingProjectException("This manager does not exist"));
 
-        return projectList.stream().map(proj -> {
+        List<Project> list = projectRepository.findAllByAssignedManager(user);
+
+        return list.stream().map(proj -> {
             ProjectDTO obj = mapperUtil.convert(proj, new ProjectDTO());
             obj.setUnfinishedTaskCount(taskService.totalCountNonCompletedTasks(proj.getProjectCode()));
             obj.setCompletedTaskCount(taskService.totalCountCompletedTasks(proj.getProjectCode()));
