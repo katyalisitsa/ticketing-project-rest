@@ -3,6 +3,7 @@ package com.apis.controller;
 import com.apis.annotation.DefaultExceptionMessage;
 import com.apis.dto.ProjectDTO;
 import com.apis.entity.ResponseWrapper;
+import com.apis.exception.TicketingProjectException;
 import com.apis.service.ProjectService;
 import com.apis.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,5 +45,33 @@ public class ProjectController {
         return ResponseEntity.ok(new ResponseWrapper("Projects are retrieved", projectDTO));
     }
 
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @PostMapping
+    @Operation(summary = "Create project")
+    @PreAuthorize("hasAnyAuthority({'Admin','Manager'})")
+    public ResponseEntity<ResponseWrapper> createProject(@RequestBody ProjectDTO projectDTO) throws TicketingProjectException {
+        ProjectDTO createdProject = projectService.save(projectDTO);
+        return ResponseEntity.ok(new ResponseWrapper("Project is created", projectDTO));
+    }
+
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @PutMapping
+    @Operation(summary = "Update project")
+    @PreAuthorize("hasAnyAuthority({'Admin','Manager'})")
+    public ResponseEntity<ResponseWrapper> updateProject(@RequestBody ProjectDTO projectDTO) throws TicketingProjectException {
+        ProjectDTO updatedProject = projectService.update(projectDTO);
+
+        return ResponseEntity.ok(new ResponseWrapper("Project is updated", projectDTO));
+    }
+
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @DeleteMapping("/{projectcode}")
+    @Operation(summary = "Delete project")
+    @PreAuthorize("hasAnyAuthority({'Admin','Manager'})")
+    public ResponseEntity<ResponseWrapper> deleteProject(@PathVariable("projectcode") String projectcode) throws TicketingProjectException {
+        projectService.delete(projectcode);
+
+        return ResponseEntity.ok(new ResponseWrapper("Project is deleted"));
+    }
 
 }

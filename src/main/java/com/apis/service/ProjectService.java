@@ -2,14 +2,15 @@ package com.apis.service;
 
 import com.apis.dto.ProjectDTO;
 import com.apis.entity.User;
+import com.apis.exception.TicketingProjectException;
 
 import java.util.List;
 
 public interface ProjectService {
     ProjectDTO getByProjectDto(String code);
     List<ProjectDTO> listAllProjects();
-    void save(ProjectDTO dto);
-    void update(ProjectDTO dto);
+    ProjectDTO save(ProjectDTO dto) throws TicketingProjectException;
+    ProjectDTO update(ProjectDTO dto);
     void delete(String projectCode);
 
     void complete(String projectCode);
@@ -17,6 +18,5 @@ public interface ProjectService {
     List<ProjectDTO> listAllProjectDetails();
 
     List<ProjectDTO> readAllByAssignedManager(User user);
-    //controller is calling service, so it is ProjectDTO
     List<ProjectDTO> listAllNonCompletedProject();
 }
