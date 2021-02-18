@@ -23,11 +23,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Tag(name="Authentication Controller", description = "Authentication API")
+@Tag(name = "Authentication Controller",description = "Authenticate API")
 public class LoginController {
-
-    @Value("${app.local-url}")
-    private String BASE_URL;
 
     private AuthenticationManager authenticationManager;
     private UserService userService;
@@ -44,29 +41,32 @@ public class LoginController {
     }
 
     @PostMapping("/authenticate")
+    @DefaultExceptionMessage(defaultMessage = "Bad Credentials")
+    @Operation(summary = "Login to application")
     public ResponseEntity<ResponseWrapper> doLogin(@RequestBody AuthenticationRequest authenticationRequest) throws TicketingProjectException {
+
         String password = authenticationRequest.getPassword();
         String username = authenticationRequest.getUsername();
 
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, password);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,password);
         authenticationManager.authenticate(authentication);
 
         UserDTO foundUser = userService.findByUserName(username);
+        User convertedUser = mapperUtil.convert(foundUser,new User());
 
-        User convertedUser = mapperUtil.convert(foundUser, new User());
-
-        if (!foundUser.isEnabled()) {
+        if(!foundUser.isEnabled()){
             throw new TicketingProjectException("Please verify your user");
         }
 
         String jwtToken = jwtUtil.generateToken(convertedUser);
 
-        return ResponseEntity.ok(new ResponseWrapper("Login Successful", jwtToken));
+        return ResponseEntity.ok(new ResponseWrapper("Login Successful",jwtToken));
 
     }
 
 
-    @DefaultExceptionMessage(defaultMessage = "Failed to confirm email, try again!")
+
+    @DefaultExceptionMessage(defaultMessage = "Failed to confirm email, please try again!")
     @GetMapping("/confirmation")
     @Operation(summary = "Confirm account")
     public ResponseEntity<ResponseWrapper> confirmEmail(@RequestParam("token") String token) throws TicketingProjectException {
@@ -75,8 +75,14 @@ public class LoginController {
         UserDTO confirmUser = userService.confirm(confirmationToken.getUser());
         confirmationTokenService.delete(confirmationToken);
 
-        return ResponseEntity.ok(new ResponseWrapper("User has been confirmed", confirmUser));
+        return ResponseEntity.ok(new ResponseWrapper("User has been confirmed!",confirmUser));
+
     }
+
+
+
+
+
 
 
 

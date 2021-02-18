@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "app.local-url",
+      "type": "java.lang.String",
+      "description": "Description for app.local-url."
+  }
+] }
