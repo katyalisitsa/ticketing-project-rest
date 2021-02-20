@@ -16,7 +16,7 @@ public interface TaskService {
 
     TaskDTO save(TaskDTO dto);
 
-    void update(TaskDTO dto);
+    TaskDTO update(TaskDTO dto) throws TicketingProjectException;
 
     void delete(Long taskId) throws TicketingProjectException;
 
