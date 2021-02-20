@@ -22,7 +22,7 @@ public class User extends BaseEntity{
     private String lastName;
     private String userName;
     private String password;
-    private boolean enabled;
+    private Boolean enabled;
     private String phone;
 
     @ManyToOne//(fetch = FetchType.EAGER)
