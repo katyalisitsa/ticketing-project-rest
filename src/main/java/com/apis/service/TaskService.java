@@ -18,7 +18,7 @@ public interface TaskService {
 
     void update(TaskDTO dto);
 
-    void delete(Long taskId);
+    void delete(Long taskId) throws TicketingProjectException;
 
     int totalCountNonCompletedTasks(String projectCode);
 
