@@ -3,6 +3,7 @@ package com.apis.controller;
 import com.apis.annotation.DefaultExceptionMessage;
 import com.apis.dto.TaskDTO;
 import com.apis.entity.ResponseWrapper;
+import com.apis.enums.Status;
 import com.apis.exception.TicketingProjectException;
 import com.apis.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,6 +83,17 @@ public class TaskController {
     public ResponseEntity<ResponseWrapper> updateTask(@RequestBody TaskDTO task) throws TicketingProjectException {
 
         TaskDTO updatedTask = taskService.update(task);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully updated task", updatedTask));
+
+    }
+
+    @GetMapping("/employee")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
+    @Operation(summary = "Read all not completed tasks")
+    @PreAuthorize("hasAuthority('Employee')")
+    public ResponseEntity<ResponseWrapper> employeeReadAllNotCompleteTask() {
+        List<TaskDTO> tasks = taskService.listAllTasksByStatusIsNot(Status.COMPLETE);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully read all non completed tasks", tasks));
 
     }
 }
