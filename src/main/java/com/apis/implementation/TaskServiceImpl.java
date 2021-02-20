@@ -54,12 +54,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task save(TaskDTO dto) {
+    public TaskDTO save(TaskDTO dto) {
         dto.setStatus(Status.OPEN);
         dto.setAssignedDate(LocalDate.now());
         Task task = mapperUtil.convert(dto, new Task());
-
-        return taskRepository.save(task);
+        Task save = taskRepository.save(task);
+        return mapperUtil.convert(save, new TaskDTO());
     }
 
     @Override
@@ -77,7 +77,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void delete(Long taskId) {
         Optional<Task> foundTask = taskRepository.findById(taskId);
-//       Task foundTask= taskRepository.findById(taskId).get();
         if (foundTask.isPresent()) {
             foundTask.get().setIsDeleted(true);
             taskRepository.save(foundTask.get());
@@ -149,8 +148,6 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskDTO> listAllTasksByStatus(Status status) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUserName(username);
-
-//        User user = userRepository.findByUserName("jalba@test.com");
         List<Task> list = taskRepository.findAllByStatusAndAssignedEmployee(status, user);
 
         return list.stream().map(taskMapper::converToDTO).collect(Collectors.toList());

@@ -3,14 +3,13 @@ package com.apis.controller;
 import com.apis.annotation.DefaultExceptionMessage;
 import com.apis.dto.TaskDTO;
 import com.apis.entity.ResponseWrapper;
+import com.apis.exception.TicketingProjectException;
 import com.apis.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,10 +37,32 @@ public class TaskController {
     @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
     @Operation(summary = "Read all tasks by project manager")
     @PreAuthorize("hasAuthority('Manager')")
-    public ResponseEntity<ResponseWrapper> readAllByProjectManager(){
+    public ResponseEntity<ResponseWrapper> readAllByProjectManager() throws TicketingProjectException {
 
         List<TaskDTO> taskList = taskService.listAllTasksByProjectManager();
 
         return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved tasks by project manager", taskList));
+    }
+
+    @GetMapping("/{id}}")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
+    @Operation(summary = "Read task by id")
+    @PreAuthorize("hasAnyAuthority('Manager','Employee')")
+    public ResponseEntity<ResponseWrapper> readById(@PathVariable("id") Long id) {
+
+        TaskDTO currentTask = taskService.findById(id);
+
+        return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved", currentTask));
+    }
+
+    @PostMapping
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
+    @Operation(summary = "Create a new task")
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> create(@RequestBody TaskDTO task) {
+
+        TaskDTO createdTask = taskService.save(task);
+
+        return ResponseEntity.ok(new ResponseWrapper("Successfully created", createdTask));
     }
 }
