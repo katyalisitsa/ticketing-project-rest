@@ -8,13 +8,12 @@ import com.apis.entity.User;
 import com.apis.exception.TicketingProjectException;
 import com.apis.dto.UserDTO;
 
-import com.apis.mapper.MapperUtil;
+import com.apis.util.MapperUtil;
 import com.apis.service.ConfirmationTokenService;
 import com.apis.service.RoleService;
 import com.apis.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;

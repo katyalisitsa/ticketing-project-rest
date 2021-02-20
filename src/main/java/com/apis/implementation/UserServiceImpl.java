@@ -5,7 +5,7 @@ import com.apis.dto.TaskDTO;
 import com.apis.dto.UserDTO;
 import com.apis.entity.User;
 import com.apis.exception.TicketingProjectException;
-import com.apis.mapper.MapperUtil;
+import com.apis.util.MapperUtil;
 import com.apis.repository.UserRepository;
 import com.apis.service.ProjectService;
 import com.apis.service.TaskService;

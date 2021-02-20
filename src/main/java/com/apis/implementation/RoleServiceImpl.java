@@ -1,7 +1,7 @@
 package com.apis.implementation;
 
 import com.apis.exception.TicketingProjectException;
-import com.apis.mapper.MapperUtil;
+import com.apis.util.MapperUtil;
 import com.apis.repository.RoleRepository;
 import com.apis.dto.RoleDTO;
 import com.apis.entity.Role;

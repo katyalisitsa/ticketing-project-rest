@@ -1,12 +1,11 @@
 package com.apis.implementation;
 
 import com.apis.dto.ProjectDTO;
-import com.apis.dto.UserDTO;
 import com.apis.entity.Project;
 import com.apis.entity.User;
 import com.apis.enums.Status;
 import com.apis.exception.TicketingProjectException;
-import com.apis.mapper.MapperUtil;
+import com.apis.util.MapperUtil;
 import com.apis.repository.ProjectRepository;
 import com.apis.repository.UserRepository;
 import com.apis.service.ProjectService;

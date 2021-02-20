@@ -2,9 +2,7 @@ package com.apis.implementation;
 
 import com.apis.dto.UserDTO;
 import com.apis.entity.User;
-import com.apis.entity.common.UserPrincipal;
-import com.apis.mapper.MapperUtil;
-import com.apis.repository.UserRepository;
+import com.apis.util.MapperUtil;
 import com.apis.service.SecurityService;
 import com.apis.service.UserService;
 import org.springframework.security.core.GrantedAuthority;

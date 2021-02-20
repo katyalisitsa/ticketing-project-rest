@@ -2,7 +2,7 @@ package com.apis.implementation;
 
 import com.apis.entity.Project;
 import com.apis.exception.TicketingProjectException;
-import com.apis.mapper.MapperUtil;
+import com.apis.util.MapperUtil;
 import com.apis.repository.TaskRepository;
 import com.apis.repository.UserRepository;
 import com.apis.dto.ProjectDTO;
