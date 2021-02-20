@@ -1,5 +1,8 @@
 package com.apis.implementation;
 
+import com.apis.entity.Project;
+import com.apis.exception.TicketingProjectException;
+import com.apis.mapper.MapperUtil;
 import com.apis.repository.TaskRepository;
 import com.apis.repository.UserRepository;
 import com.apis.dto.ProjectDTO;
@@ -20,37 +23,33 @@ import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
-    private TaskMapper taskMapper;
     private TaskRepository taskRepository;
-    private ProjectMapper projectMapper;
+    private MapperUtil mapperUtil;
     private UserRepository userRepository;
 
-    public TaskServiceImpl(TaskMapper taskMapper, TaskRepository taskRepository, ProjectMapper projectMapper, UserRepository userRepository) {
-        this.taskMapper = taskMapper;
+    public TaskServiceImpl(TaskRepository taskRepository, MapperUtil mapperUtil, UserRepository userRepository) {
         this.taskRepository = taskRepository;
-        this.projectMapper = projectMapper;
+        this.mapperUtil = mapperUtil;
         this.userRepository = userRepository;
     }
 
     @Override
     public TaskDTO findById(Long taskId) {
-        Optional<Task> task=taskRepository.findById(taskId);
-        if (task.isPresent()){
-            return taskMapper.converToDTO(task.get());
+        Optional<Task> task = taskRepository.findById(taskId);
+        if (task.isPresent()) {
+            return mapperUtil.convert(task.get(), new TaskDTO());
         }
         return null;
     }
 
     @Override
     public List<TaskDTO> listAllTasks() {
-        List<Task> tasks=taskRepository.findAll();
-//        List<Task> tasks=taskRepository.findAll();
+        List<Task> tasks = taskRepository.findAll();
+
         return tasks.stream()
-                .map(taskMapper::converToDTO).collect(Collectors.toList());
-//        return tasks.stream()
-//                .map(task-> {
-//                    return taskMapper.converToDTO(task);
-//                }).collect(Collectors.toList());
+                .map(task -> {
+                    return mapperUtil.convert(task, new TaskDTO());
+                }).collect(Collectors.toList());
 
     }
 
@@ -58,16 +57,16 @@ public class TaskServiceImpl implements TaskService {
     public Task save(TaskDTO dto) {
         dto.setStatus(Status.OPEN);
         dto.setAssignedDate(LocalDate.now());
-        Task task=taskMapper.convertToEntity(dto);
+        Task task = mapperUtil.convert(dto, new Task());
 
         return taskRepository.save(task);
     }
 
     @Override
     public void update(TaskDTO dto) {
-        Optional <Task> task=taskRepository.findById(dto.getId());
-        Task convertedTask=taskMapper.convertToEntity(dto);
-        if(task.isPresent()){
+        Optional<Task> task = taskRepository.findById(dto.getId());
+        Task convertedTask = mapperUtil.convert(dto, new Task());
+        if (task.isPresent()) {
             convertedTask.setId(task.get().getId());
             convertedTask.setStatus(task.get().getStatus());
             convertedTask.setAssignedDate(task.get().getAssignedDate());
@@ -77,12 +76,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void delete(Long taskId) {
-       Optional<Task> foundTask=taskRepository.findById(taskId);
+        Optional<Task> foundTask = taskRepository.findById(taskId);
 //       Task foundTask= taskRepository.findById(taskId).get();
-       if (foundTask.isPresent()){
+        if (foundTask.isPresent()) {
             foundTask.get().setIsDeleted(true);
             taskRepository.save(foundTask.get());
-       }
+        }
 
     }
 
@@ -102,7 +101,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteByProject(ProjectDTO project) {
-        List<TaskDTO> taskDTOS=listAllTasksByProject(project);
+        List<TaskDTO> taskDTOS = listAllTasksByProject(project);
         taskDTOS.forEach(taskDTO -> delete(taskDTO.getId()));
 
 
@@ -111,37 +110,35 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskDTO> listAllTasksByProject(ProjectDTO project) {
-        List<Task> list=taskRepository.findAllByProject(projectMapper.convertToEntity(project));
+        List<Task> list = taskRepository.findAllByProject(mapperUtil.convert(project, new Project()));
 
-        return list.stream().map(obj->{
-            return taskMapper.converToDTO(obj);
+        return list.stream().map(obj -> {
+            return mapperUtil.convert(obj, new TaskDTO());
         }).collect(Collectors.toList());
     }
+
     @Override
     public List<TaskDTO> listAllTasksByStatusIsNot(Status status) {
-        String username= SecurityContextHolder.getContext().getAuthentication().getName();
-        User user =userRepository.findByUserName(username);
-
-//        User user =userRepository.findByUserName("jalba@test.com"); //hard coded, and will be dynamic later
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUserName(username);
         List<Task> list = taskRepository.findAllByStatusIsNotAndAssignedEmployee(status, user);
 
         return list.stream().map(taskMapper::converToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public List<TaskDTO> listAllTasksByProjectManager() {
-        String username= SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUserName(username);
+    public List<TaskDTO> listAllTasksByProjectManager() throws TicketingProjectException {
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findById(Long.parseLong(id)).orElseThrow(() -> new TicketingProjectException("This user does not exist"));
 
-//        User user = userRepository.findByUserName("msmith@test.com");
-        List<Task> tasks=taskRepository.findAllByProjectAssignedManager(user);
-        return tasks.stream().map(taskMapper::converToDTO).collect(Collectors.toList());
+        List<Task> tasks = taskRepository.findAllByProjectAssignedManager(user);
+        return tasks.stream().map(obj -> mapperUtil.convert(obj, new TaskDTO())).collect(Collectors.toList());
     }
 
     @Override
     public void updateStatus(TaskDTO dto) {
-        Optional<Task> task=taskRepository.findById(dto.getId());
-        if(task.isPresent()){
+        Optional<Task> task = taskRepository.findById(dto.getId());
+        if (task.isPresent()) {
             task.get().setStatus(dto.getStatus());
             taskRepository.save(task.get());
         }
@@ -150,18 +147,18 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskDTO> listAllTasksByStatus(Status status) {
-        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUserName(username);
 
 //        User user = userRepository.findByUserName("jalba@test.com");
-        List<Task> list=taskRepository.findAllByStatusAndAssignedEmployee(status, user);
+        List<Task> list = taskRepository.findAllByStatusAndAssignedEmployee(status, user);
 
         return list.stream().map(taskMapper::converToDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<TaskDTO> readAllByEmployee(User assignedEmployee) {
-        List<Task> list = taskRepository.findAllByAssignedEmployee( assignedEmployee);
+        List<Task> list = taskRepository.findAllByAssignedEmployee(assignedEmployee);
         return list.stream().map(taskMapper::converToDTO).collect(Collectors.toList());
 
     }

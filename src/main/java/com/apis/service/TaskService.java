@@ -5,6 +5,7 @@ import com.apis.dto.TaskDTO;
 import com.apis.entity.Task;
 import com.apis.entity.User;
 import com.apis.enums.Status;
+import com.apis.exception.TicketingProjectException;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface TaskService {
 
     List<TaskDTO> listAllTasksByStatusIsNot(Status status);
 
-    List<TaskDTO> listAllTasksByProjectManager();
+    List<TaskDTO> listAllTasksByProjectManager() throws TicketingProjectException;
 
     void updateStatus (TaskDTO dto);
 

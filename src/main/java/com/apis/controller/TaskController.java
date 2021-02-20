@@ -1,6 +1,7 @@
 package com.apis.controller;
 
 import com.apis.annotation.DefaultExceptionMessage;
+import com.apis.dto.TaskDTO;
 import com.apis.entity.ResponseWrapper;
 import com.apis.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,5 +32,16 @@ public class TaskController {
     public ResponseEntity<ResponseWrapper> readAll() {
 
         return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved all tasks", taskService.listAllTasks()));
+    }
+
+    @GetMapping("/project-manager")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
+    @Operation(summary = "Read all tasks by project manager")
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> readAllByProjectManager(){
+
+        List<TaskDTO> taskList = taskService.listAllTasksByProjectManager();
+
+        return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved tasks by project manager", taskList));
     }
 }
