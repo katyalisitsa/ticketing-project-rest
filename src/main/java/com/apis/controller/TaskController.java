@@ -9,7 +9,6 @@ import com.apis.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -91,9 +90,14 @@ public class TaskController {
     @DefaultExceptionMessage(defaultMessage = "Something went wrong, please try again!")
     @Operation(summary = "Read all not completed tasks")
     @PreAuthorize("hasAuthority('Employee')")
-    public ResponseEntity<ResponseWrapper> employeeReadAllNotCompleteTask() {
+    public ResponseEntity<ResponseWrapper> employeeReadAllNotCompleteTask() throws TicketingProjectException {
         List<TaskDTO> tasks = taskService.listAllTasksByStatusIsNot(Status.COMPLETE);
         return ResponseEntity.ok(new ResponseWrapper("Successfully read all non completed tasks", tasks));
 
+    }
+
+    public ResponseEntity<ResponseWrapper> employeeUpdateTask(@RequestBody TaskDTO taskDTO) {
+        TaskDTO task = taskService.updateStatus(taskDTO);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully employee task status updated", task));
     }
 }
