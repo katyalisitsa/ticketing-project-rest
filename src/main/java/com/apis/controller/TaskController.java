@@ -96,7 +96,7 @@ public class TaskController {
 
     }
 
-    public ResponseEntity<ResponseWrapper> employeeUpdateTask(@RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<ResponseWrapper> employeeUpdateTask(@RequestBody TaskDTO taskDTO) throws TicketingProjectException {
         TaskDTO task = taskService.updateStatus(taskDTO);
         return ResponseEntity.ok(new ResponseWrapper("Successfully employee task status updated", task));
     }
