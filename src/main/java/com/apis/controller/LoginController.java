@@ -1,6 +1,7 @@
 package com.apis.controller;
 
 import com.apis.annotation.DefaultExceptionMessage;
+import com.apis.annotation.ExecutionTime;
 import com.apis.dto.UserDTO;
 import com.apis.entity.ConfirmationToken;
 import com.apis.entity.ResponseWrapper;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.file.AccessDeniedException;
 
 @RestController
-@Tag(name = "Authentication Controller",description = "Authenticate API")
+@Tag(name = "Authentication Controller", description = "Authenticate API")
 public class LoginController {
 
     private AuthenticationManager authenticationManager;
@@ -41,27 +42,27 @@ public class LoginController {
     @PostMapping("/authenticate")
     @DefaultExceptionMessage(defaultMessage = "Bad Credentials")
     @Operation(summary = "Login to application")
+    @ExecutionTime
     public ResponseEntity<ResponseWrapper> doLogin(@RequestBody AuthenticationRequest authenticationRequest) throws TicketingProjectException, AccessDeniedException {
 
         String password = authenticationRequest.getPassword();
         String username = authenticationRequest.getUsername();
 
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,password);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, password);
         authenticationManager.authenticate(authentication);
 
         UserDTO foundUser = userService.findByUserName(username);
-        User convertedUser = mapperUtil.convert(foundUser,new User());
+        User convertedUser = mapperUtil.convert(foundUser, new User());
 
-        if(!foundUser.isEnabled()){
+        if (!foundUser.isEnabled()) {
             throw new TicketingProjectException("Please verify your user");
         }
 
         String jwtToken = jwtUtil.generateToken(convertedUser);
 
-        return ResponseEntity.ok(new ResponseWrapper("Login Successful",jwtToken));
+        return ResponseEntity.ok(new ResponseWrapper("Login Successful", jwtToken));
 
     }
-
 
 
     @DefaultExceptionMessage(defaultMessage = "Failed to confirm email, please try again!")
@@ -73,15 +74,9 @@ public class LoginController {
         UserDTO confirmUser = userService.confirm(confirmationToken.getUser());
         confirmationTokenService.delete(confirmationToken);
 
-        return ResponseEntity.ok(new ResponseWrapper("User has been confirmed!",confirmUser));
+        return ResponseEntity.ok(new ResponseWrapper("User has been confirmed!", confirmUser));
 
     }
-
-
-
-
-
-
 
 
 }
