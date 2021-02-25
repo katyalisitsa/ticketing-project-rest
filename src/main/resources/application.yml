@@ -40,7 +40,7 @@ spring:
     password: Cybertekschool@2020
 security:
   jwt:
-    secret-key: cybertek
+    secret-key: katerynakey
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
