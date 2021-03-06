@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
+@Builder
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer"}, ignoreUnknown = true)
 public class ProjectDTO {
     private Long id;
